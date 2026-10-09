@@ -1,0 +1,573 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import {
+  ProjectInfo,
+  WorkflowStep,
+  ActivityLog,
+  AutomatedCheck,
+  CustomBOMItem,
+  CommentItem,
+  UnitGroupItem,
+  AuditLogItem,
+  UserAccountItem,
+  EstimationModel,
+  BudgetExecutionItem,
+  PilotProjectItem,
+} from './types';
+
+// Default Taipei City Project Information for Dashboard
+export const defaultProjectInfo: ProjectInfo = {
+  id: 'TP-INFRA-2024-089A',
+  name: '臺北市公共工程碳盤查示範專案',
+  type: '公共建築工程',
+  location: '臺北市信義區松高路',
+  scaleSqm: 12000,
+  status: 'In Progress',
+  estimatedCo2: 8640,
+  totalBudgetCo2: 12000,
+};
+
+// Seeding Workflow Progress
+export const defaultWorkflowSteps: WorkflowStep[] = [
+  {
+    id: 1,
+    name: '專案登錄',
+    enName: 'Project Reg',
+    status: 'done',
+    updatedAt: '2026-05-28 10:00',
+    operator: '林雅婷 技士',
+  },
+  {
+    id: 2,
+    name: '數據匯入',
+    enName: 'Data Import',
+    status: 'done',
+    updatedAt: '2026-05-29 14:20',
+    operator: 'PCCES 自動解算模組',
+  },
+  {
+    id: 3,
+    name: '語意配對',
+    enName: 'NLP Matching',
+    status: 'active',
+  },
+  {
+    id: 4,
+    name: '最終審核',
+    enName: 'Final Review',
+    status: 'pending',
+  },
+];
+
+// Activity log lists
+export const defaultActivityLogs: ActivityLog[] = [
+  {
+    id: 'act-1',
+    title: '智慧語意配對完成',
+    subtitle: '系統精準配對 • 85 個材料工項已自動完成碳排係數配對',
+    timeAgo: '10 分鐘前',
+    type: 'nlp',
+  },
+  {
+    id: 'act-2',
+    title: '設計單位上傳 PCCES XML 清冊',
+    subtitle: '操作者：陳怡君 技師 • 115_橋梁盤查清冊_v1.0.xml',
+    timeAgo: '2 小時前',
+    type: 'upload',
+  },
+  {
+    id: 'act-3',
+    title: '系統每日備份已完成',
+    subtitle: '系統背景安全維運 • 快照編號 #BK-62810',
+    timeAgo: '5 小時前',
+    type: 'system',
+  },
+  {
+    id: 'act-4',
+    title: '修改工項：C-400-STR 數量由 10,500 調整至 12,500',
+    subtitle: '變更人：張建宏 工程師 • 依現場施工量測覆核修正',
+    timeAgo: '21 小時前',
+    type: 'edit',
+  },
+];
+
+// Automated check results
+export const defaultAutomatedChecks: AutomatedCheck[] = [
+  {
+    id: 'chk-1',
+    severity: 'critical',
+    title: '重大宣告警報',
+    description: '核心盤查工項漏缺：未偵測到基礎版專屬之鋼材與防水複合物碳排係數。',
+    bomLink: true,
+  },
+  {
+    id: 'chk-2',
+    severity: 'deviation',
+    title: '碳排數值離群注意',
+    description: '此型材料之平均碳排強度與同級距歷史專案均值相比偏離逾 +20%，建議主管覆核。',
+  },
+];
+
+// Bill of Materials (BOM) item list
+export const defaultBOMItems: CustomBOMItem[] = [
+  {
+    id: 'bom-1',
+    code: 'C-400-STR',
+    description: '卜特蘭一型水泥 (Portland Cement Type I)',
+    quantity: '12,500 m³',
+    efValue: 410.5,
+    totalKgCo2: 5131250,
+    status: 'high_emission',
+  },
+  {
+    id: 'bom-2',
+    code: 'S-220-RBR',
+    description: '竹節鋼筋 (Rebar SD420W)',
+    quantity: '850 t',
+    efValue: 1.85,
+    totalKgCo2: 1572500,
+    status: 'manually_adjusted',
+  },
+  {
+    id: 'bom-3',
+    code: 'W-010-EXC',
+    description: '機械土方開挖 (Excavation Works Machine)',
+    quantity: '45,000 m³',
+    efValue: 0.05,
+    totalKgCo2: 2250,
+    status: 'standard',
+  },
+  {
+    id: 'bom-4',
+    code: 'M-100-ASB',
+    description: '瀝青混凝土基層 (Asphalt Base Course)',
+    quantity: '3,200 t',
+    efValue: 0.42,
+    totalKgCo2: 1344,
+    status: 'standard',
+  },
+  {
+    id: 'bom-5',
+    code: 'E-330-CON',
+    description: '預拌混凝土 (Ready-Mixed Concrete 280kg/cm²)',
+    quantity: '18,200 m³',
+    efValue: 320.0,
+    totalKgCo2: 5824000,
+    status: 'high_emission',
+  },
+  {
+    id: 'bom-6',
+    code: 'F-120-FRM',
+    description: '系統鋼範模板 (Steel Formwork for Column)',
+    quantity: '23,500 m²',
+    efValue: 1.25,
+    totalKgCo2: 29375,
+    status: 'standard',
+  },
+];
+
+// SOP Comment timeline log
+export const defaultComments: CommentItem[] = [
+  {
+    id: 'c-1',
+    author: '陳怡君 技師',
+    avatarText: '陳',
+    role: '專案稽核工程師',
+    content: '已主動標記卜特蘭一型水泥申報用量。該申報用量相較於設計底圖與標準基礎澆灌體積偏高，請填報單位覆核 S-04 詳圖設計後提出說明。',
+    timestamp: '2026-05-14 09:15',
+  },
+  {
+    id: 'c-2',
+    author: '系統操作軌跡紀錄',
+    avatarText: '系統',
+    role: '系統核心日誌',
+    content: '經辦人員張建宏已將 C-400-STR 材料申報數量由原 10,500 正式上調修訂至 12,500。 (修正時間：05-13 16:42)',
+    timestamp: '2026-05-13 16:42',
+    isSystem: true,
+  },
+];
+
+// Organization/Unit directory list
+export const defaultUnitGroups: UnitGroupItem[] = [
+  {
+    id: 'unit-1',
+    name: '臺北市政府都市發展局',
+    taxId: '03778201',
+    category: 'Government',
+    contactPerson: '林韋辰 技正',
+    phone: '02-2720-8889',
+    activeProjects: 14,
+  },
+  {
+    id: 'unit-2',
+    name: '臺北市政府工務局',
+    taxId: '03778899',
+    category: 'Government',
+    contactPerson: '陳建國 (工務科科長)',
+    phone: '02-2720-8889 #104',
+    activeProjects: 12,
+  },
+  {
+    id: 'unit-3',
+    name: '長青營造工程股份有限公司',
+    taxId: '84729103',
+    category: 'Construction',
+    contactPerson: '陳怡婷 專案經理',
+    phone: '02-8765-4321',
+    activeProjects: 8,
+  },
+  {
+    id: 'unit-4',
+    name: '建國工程股份有限公司',
+    taxId: '55667788',
+    category: 'Construction',
+    contactPerson: '王大偉 (主任技師)',
+    phone: '02-2500-1111',
+    activeProjects: 3,
+  },
+  {
+    id: 'unit-5',
+    name: '中興工程顧問股份有限公司',
+    taxId: '11223344',
+    category: 'Consultant',
+    contactPerson: '林雅惠 (綠色專案經理)',
+    phone: '02-2712-4321',
+    activeProjects: 8,
+  },
+  {
+    id: 'unit-6',
+    name: '台灣世曦工程顧問股份有限公司',
+    taxId: '99887766',
+    category: 'Consultant',
+    contactPerson: '張志明 (碳排總評估師)',
+    phone: '02-8797-1122',
+    activeProjects: 15,
+  },
+  {
+    id: 'unit-7',
+    name: '聯點建築設計事務所',
+    taxId: '23948571',
+    category: 'Consultant',
+    contactPerson: '王國華 建築師',
+    phone: '04-2345-6789',
+    activeProjects: 12,
+  },
+];
+
+// Audit trail tables
+export const defaultAuditLogs: AuditLogItem[] = [
+  {
+    id: 'log-1',
+    timestamp: '2026-05-30 14:32:01',
+    operator: '林雅婷',
+    userId: 'USR-8821',
+    department: '環境保護局 - 稽查科',
+    action: '匯出專案報告 (ID: PRJ-2023-11A)',
+    ip: '192.168.1.105',
+    success: true,
+  },
+  {
+    id: 'log-2',
+    timestamp: '2026-05-30 14:15:44',
+    operator: '陳建國',
+    userId: 'USR-4432',
+    department: '企業發展署 - 永續部',
+    action: '更新碳排係數設定 (參數版號: V2.1)',
+    ip: '10.0.5.22',
+    success: true,
+  },
+  {
+    id: 'log-3',
+    timestamp: '2026-05-30 13:58:12',
+    operator: '系統自動執行',
+    userId: 'SYS-AUTO',
+    department: '系統背景服務',
+    action: '每日資料庫備份與快照建立',
+    ip: '127.0.0.1',
+    success: true,
+  },
+  {
+    id: 'log-4',
+    timestamp: '2026-05-30 11:42:05',
+    operator: '匿名訪客',
+    userId: 'ANON-VISITOR',
+    department: '-',
+    action: '嘗試登入失敗 (密碼錯誤連續 3 次)',
+    ip: '203.0.113.45',
+    success: false,
+    failReason: '密碼校驗不符',
+  },
+  {
+    id: 'log-5',
+    timestamp: '2026-05-30 10:20:33',
+    operator: '張志豪',
+    userId: 'USR-1190',
+    department: '系統管理部',
+    action: '調整系統全域參數 (API Rate Limit)',
+    ip: '192.168.2.50',
+    success: true,
+  },
+  {
+    id: 'log-6',
+    timestamp: '2026-05-29 16:45:10',
+    operator: '張子軒',
+    userId: 'USR-1022',
+    department: '交通局 / 綜合規劃科',
+    action: '自動語意配對彙編 (匯入 PCCESS XML 盤查清冊)',
+    ip: '172.16.254.1',
+    success: false,
+    failReason: 'XML Schema 結構缺陷',
+  },
+];
+
+// Seed human Admin User Accounts
+export const defaultUserAccounts: UserAccountItem[] = [
+  {
+    id: 'usr-1',
+    name: '陳志明',
+    email: 'c.ming@gov.tw',
+    dept: '環保局 - 稽查科',
+    role: '終審稽核評估員',
+    status: 'Active',
+    lastLogin: '2026-05-30 09:12',
+  },
+  {
+    id: 'usr-2',
+    name: '林雅婷',
+    email: 'y.ting.lin@external.com',
+    dept: '綠能科技股份有限公司',
+    role: '專案盤查申報代理',
+    status: 'Pending',
+    lastLogin: '-',
+  },
+  {
+    id: 'usr-3',
+    name: '王大偉',
+    email: 'd.wang@gov.tw',
+    dept: '建設局 - 設施管理科',
+    role: '基礎數據填報人',
+    status: 'Active',
+    lastLogin: '2026-05-29 16:45',
+  },
+  {
+    id: 'usr-4',
+    name: '周傑森',
+    email: 'j.smith@auditor.gov.tw',
+    dept: '工務局 - 新建工程處',
+    role: '專案稽核工程師',
+    status: 'Active',
+    lastLogin: '2026-05-30 11:30',
+  },
+  {
+    id: 'usr-5',
+    name: '曾麗華',
+    email: 'l.tseng@gov.tw',
+    dept: '都市發展局 - 企劃科',
+    role: '市府審查管理員',
+    status: 'Disabled',
+    lastLogin: '2026-05-12 14:00',
+  },
+];
+
+// 關鍵工項快速估算模型資料 (依據需求說明書：建築前5因子、道路前6因子、人行道前9因子、橋梁水利等擴充)
+export const defaultEstimationModels: import('./types').EstimationModel[] = [
+  {
+    category: 'building',
+    name: '建築工程快速估算模型 (前5大關鍵因子)',
+    stage: '前期已建置',
+    factorCount: 5,
+    blindTestSamples: 85,
+    accuracyRate: 94.2,
+    description: '涵蓋建築結構體主要碳排放源，透過前5大關鍵工項快速推估整體專案達 85% 以上之生命週期碳排量。',
+    factors: [
+      { id: 'b-1', name: '預拌混凝土 (280kgf/cm²)', unit: 'm³', defaultEf: 320.0, weight: 42.5, inputQuantity: 18500, calculatedEmission: 5920000 },
+      { id: 'b-2', name: '竹節鋼筋 (SD420W)', unit: 't', defaultEf: 1850.0, weight: 26.8, inputQuantity: 920, calculatedEmission: 1702000 },
+      { id: 'b-3', name: '鋼模 / 系統模板', unit: 'm²', defaultEf: 12.8, weight: 8.4, inputQuantity: 32000, calculatedEmission: 409600 },
+      { id: 'b-4', name: '開挖土石方與回填', unit: 'm³', defaultEf: 6.2, weight: 4.8, inputQuantity: 42000, calculatedEmission: 260400 },
+      { id: 'b-5', name: '砂石級配與地坪打底', unit: 'm³', defaultEf: 8.5, weight: 3.2, inputQuantity: 11000, calculatedEmission: 93500 },
+    ],
+  },
+  {
+    category: 'road',
+    name: '道路工程快速估算模型 (前6大關鍵因子)',
+    stage: '前期已建置',
+    factorCount: 6,
+    blindTestSamples: 62,
+    accuracyRate: 93.8,
+    description: '鎖定臺北市市區道路鋪築、銑鋪改善及基底層工程之主要材料工項。',
+    factors: [
+      { id: 'r-1', name: '瀝青混凝土面層 (DGAC)', unit: 't', defaultEf: 52.4, weight: 38.6, inputQuantity: 8400, calculatedEmission: 440160 },
+      { id: 'r-2', name: '瀝青混凝土基層 (BM)', unit: 't', defaultEf: 48.6, weight: 25.4, inputQuantity: 6200, calculatedEmission: 301320 },
+      { id: 'r-3', name: '碎石級配底層', unit: 'm³', defaultEf: 14.2, weight: 14.2, inputQuantity: 9500, calculatedEmission: 134900 },
+      { id: 'r-4', name: '原有路面刨除銑鋪', unit: 'm²', defaultEf: 2.1, weight: 8.5, inputQuantity: 45000, calculatedEmission: 94500 },
+      { id: 'r-5', name: '熱拌反光標線劃設', unit: 'm²', defaultEf: 6.8, weight: 3.2, inputQuantity: 2400, calculatedEmission: 16320 },
+      { id: 'r-6', name: '刨除料與廢土運離處置', unit: 't·km', defaultEf: 0.12, weight: 5.1, inputQuantity: 85000, calculatedEmission: 10200 },
+    ],
+  },
+  {
+    category: 'sidewalk',
+    name: '人行道工程快速估算模型 (前9大關鍵因子)',
+    stage: '前期已建置',
+    factorCount: 9,
+    blindTestSamples: 54,
+    accuracyRate: 95.1,
+    description: '標準化臺北市人行道更新、無障礙斜坡道及透水鋪面環境營造之9項關鍵工料。',
+    factors: [
+      { id: 's-1', name: '高壓混凝土透水磚鋪面', unit: 'm²', defaultEf: 28.5, weight: 28.2, inputQuantity: 4500, calculatedEmission: 128250 },
+      { id: 's-2', name: '乾拌水泥砂漿打底', unit: 'm³', defaultEf: 245.0, weight: 19.5, inputQuantity: 420, calculatedEmission: 102900 },
+      { id: 's-3', name: '碎石級配透水底層', unit: 'm³', defaultEf: 14.2, weight: 12.8, inputQuantity: 850, calculatedEmission: 12070 },
+      { id: 's-4', name: '花崗石/高壓混凝土路緣石', unit: 'm', defaultEf: 18.4, weight: 9.6, inputQuantity: 2200, calculatedEmission: 40480 },
+      { id: 's-5', name: '導盲磚及無障礙警示磚', unit: 'm²', defaultEf: 24.0, weight: 6.2, inputQuantity: 380, calculatedEmission: 9120 },
+      { id: 's-6', name: '路樹植穴蓋板與保護格柵', unit: '組', defaultEf: 45.0, weight: 5.4, inputQuantity: 120, calculatedEmission: 5400 },
+      { id: 's-7', name: '透水瀝青調節層', unit: 'm²', defaultEf: 12.3, weight: 7.1, inputQuantity: 2100, calculatedEmission: 25830 },
+      { id: 's-8', name: '基地基礎整平及機械夯實', unit: 'm²', defaultEf: 1.8, weight: 4.8, inputQuantity: 4800, calculatedEmission: 8640 },
+      { id: 's-9', name: '廢棄鋪面敲除及清運處置', unit: 'm³', defaultEf: 8.6, weight: 6.4, inputQuantity: 620, calculatedEmission: 5332 },
+    ],
+  },
+  {
+    category: 'bridge',
+    name: '橋梁工程快速估算模型 (前8大關鍵因子)',
+    stage: '本期深化擴充',
+    factorCount: 8,
+    blindTestSamples: 28,
+    accuracyRate: 91.5,
+    description: '針對跨河橋梁、高架快速道路箱型梁、墩柱基樁等大宗結構物擴充快速估算公式。',
+    factors: [
+      { id: 'br-1', name: '結構鋼板 (SM490YB/鋼箱梁)', unit: 't', defaultEf: 2150.0, weight: 36.5, inputQuantity: 650, calculatedEmission: 1397500 },
+      { id: 'br-2', name: '高強度自充填混凝土 (SCC 350kgf/cm²)', unit: 'm³', defaultEf: 360.0, weight: 28.4, inputQuantity: 3800, calculatedEmission: 1368000 },
+      { id: 'br-3', name: '全套管反循環基樁打設', unit: 'm', defaultEf: 145.0, weight: 12.2, inputQuantity: 1800, calculatedEmission: 261000 },
+      { id: 'br-4', name: '預力鋼絞線及錨定端', unit: 't', defaultEf: 2400.0, weight: 8.6, inputQuantity: 95, calculatedEmission: 228000 },
+      { id: 'br-5', name: '齒型伸縮縫裝置', unit: 'm', defaultEf: 85.0, weight: 3.4, inputQuantity: 160, calculatedEmission: 13600 },
+      { id: 'br-6', name: '橡膠防震支承墊 (HDRB)', unit: '塊', defaultEf: 180.0, weight: 3.1, inputQuantity: 48, calculatedEmission: 8640 },
+      { id: 'br-7', name: '重防蝕重力塗裝工程', unit: 'm²', defaultEf: 16.5, weight: 4.2, inputQuantity: 12000, calculatedEmission: 198000 },
+      { id: 'br-8', name: '鋼構運送與吊裝重機械運轉', unit: '機時', defaultEf: 78.0, weight: 3.6, inputQuantity: 420, calculatedEmission: 32760 },
+    ],
+  },
+  {
+    category: 'water',
+    name: '水利與防洪工程快速估算模型 (前7大關鍵因子)',
+    stage: '本期深化擴充',
+    factorCount: 7,
+    blindTestSamples: 22,
+    accuracyRate: 92.1,
+    description: '防洪牆、高灘地箱涵、抽水站擴建與護岸綠美化之關鍵因子核算。',
+    factors: [
+      { id: 'w-1', name: '防水抗滲混凝土 (280kgf/cm²)', unit: 'm³', defaultEf: 335.0, weight: 34.2, inputQuantity: 5200, calculatedEmission: 1742000 },
+      { id: 'w-2', name: '鍍鋅鋼板樁圍堰 (Type IV)', unit: 't', defaultEf: 1920.0, weight: 22.8, inputQuantity: 310, calculatedEmission: 595200 },
+      { id: 'w-3', name: '高灘地箱涵預鑄涵管', unit: 'm', defaultEf: 260.0, weight: 15.6, inputQuantity: 820, calculatedEmission: 213200 },
+      { id: 'w-4', name: '河道疏濬土石方運棄', unit: 'm³', defaultEf: 5.8, weight: 9.4, inputQuantity: 48000, calculatedEmission: 278400 },
+      { id: 'w-5', name: '拋石護岸塊石 (30~50cm)', unit: 'm³', defaultEf: 11.2, weight: 7.2, inputQuantity: 6500, calculatedEmission: 72800 },
+      { id: 'w-6', name: '鋼製防洪活動閘門', unit: '組', defaultEf: 1650.0, weight: 6.1, inputQuantity: 12, calculatedEmission: 19800 },
+      { id: 'w-7', name: '水土保持鍍鋅蛇籠編織', unit: '座', defaultEf: 48.0, weight: 4.7, inputQuantity: 520, calculatedEmission: 24960 },
+    ],
+  },
+  {
+    category: 'park',
+    name: '公園景觀綠美化工程快速估算模型 (前6大關鍵因子)',
+    stage: '本期深化擴充',
+    factorCount: 6,
+    blindTestSamples: 30,
+    accuracyRate: 90.7,
+    description: '針對公園綠地、景觀水圳、步道及植栽減碳/固碳量進行綜合快速評估。',
+    factors: [
+      { id: 'p-1', name: '景觀透水步道及碎石鋪面', unit: 'm²', defaultEf: 22.0, weight: 31.4, inputQuantity: 3800, calculatedEmission: 83600 },
+      { id: 'p-2', name: '景觀水池防滲皂土毯與RC池體', unit: 'm²', defaultEf: 45.0, weight: 24.2, inputQuantity: 1200, calculatedEmission: 54000 },
+      { id: 'p-3', name: '地形整地與微地形堆土挖填', unit: 'm³', defaultEf: 4.5, weight: 16.5, inputQuantity: 8500, calculatedEmission: 38250 },
+      { id: 'p-4', name: '低耗能LED景觀照明燈具', unit: '座', defaultEf: 38.0, weight: 8.4, inputQuantity: 65, calculatedEmission: 2470 },
+      { id: 'p-5', name: '全自動雨水回收灌溉管線', unit: 'm', defaultEf: 12.0, weight: 7.5, inputQuantity: 1400, calculatedEmission: 16800 },
+      { id: 'p-6', name: '本土原生喬木植栽固碳抵換', unit: '株', defaultEf: -18.5, weight: -12.0, inputQuantity: 450, calculatedEmission: -8325 },
+    ],
+  },
+];
+
+// 計畫經費預算配置與執行進度 (總預算450萬元整，600日曆天)
+export const defaultBudgetExecution: import('./types').BudgetExecutionItem[] = [
+  {
+    id: 1,
+    name: '1. 資訊系統開發與建置費',
+    allocatedAmount: 1800000,
+    spentAmount: 1180000,
+    progressPercent: 65.6,
+    description: '平台前端儀表板、後端架構、PCCES 解析模組、多角色權限管理、雲端環境部署及資安弱點檢測。',
+  },
+  {
+    id: 2,
+    name: '2. 排放係數AI語意比對演算法之建置',
+    allocatedAmount: 1000000,
+    spentAmount: 720000,
+    progressPercent: 72.0,
+    description: 'AI語意演算法最佳化、本土化係數資料庫自動媒合邏輯、API 介接與系統整合壓力測試。',
+  },
+  {
+    id: 3,
+    name: '3. 模型校正與擴充研究分析',
+    allocatedAmount: 700000,
+    spentAmount: 410000,
+    progressPercent: 58.6,
+    description: '擴大歷史與新開工案件盲測分析、多工種（橋梁/水利/公園/下水道）快速估算公式研擬與調整係數校正。',
+  },
+  {
+    id: 4,
+    name: '4. 制度建立、手冊編撰與輔導訓練',
+    allocatedAmount: 500000,
+    spentAmount: 260000,
+    progressPercent: 52.0,
+    description: '申報SOP作業指引編撰、使用者操作手冊、3場教育訓練宣導會及至少3案示範工程試辦導入。',
+  },
+  {
+    id: 5,
+    name: '5. 專案管理、稅捐及行政雜支',
+    allocatedAmount: 500000,
+    spentAmount: 285000,
+    progressPercent: 57.0,
+    description: '專案管理管考、專家諮詢審查會、成果報告編印、法定營業稅（5%）及其他行政雜支支出。',
+  },
+];
+
+// 示範工程導入試辦案場名冊 (府內機關：新工處、水利處、公園處、大地處)
+export const defaultPilotProjects: import('./types').PilotProjectItem[] = [
+  {
+    id: 'pilot-1',
+    name: '士林區中正路人行環境改造及透水鋪面示範工程',
+    agency: '新工處',
+    status: '審查簽准核可',
+    pccesImported: true,
+    baselineCo2: 385,
+    reducedCo2: 58.4,
+    contractor: '春原營造股份有限公司',
+  },
+  {
+    id: 'pilot-2',
+    name: '基隆河右岸成美左岸防洪牆結構耐震補強與機組更新工程',
+    agency: '水利處',
+    status: '模型盲測驗證',
+    pccesImported: true,
+    baselineCo2: 1420,
+    reducedCo2: 195.0,
+    contractor: '皇昌營造股份有限公司',
+  },
+  {
+    id: 'pilot-3',
+    name: '文山區木柵路邊坡落石防護及大地水土保持示範工程',
+    agency: '大地處',
+    status: '輔導填報中',
+    pccesImported: true,
+    baselineCo2: 610,
+    reducedCo2: 74.2,
+    contractor: '宏盛營造股份有限公司',
+  },
+  {
+    id: 'pilot-4',
+    name: '大安森林公園西南側生態水圳與低碳地景改造工程',
+    agency: '公園處',
+    status: '輔導填報中',
+    pccesImported: true,
+    baselineCo2: 490,
+    reducedCo2: 82.0,
+    contractor: '長鴻營造股份有限公司',
+  },
+];
+

@@ -1,0 +1,8 @@
+{
+  "name": "Remix: 臺北市政府工程碳管理系統",
+  "description": "臺北市政府公共工程碳盤查大數據管理系統，提供工程碳盤查儀表板、PCCES數據智慧配對、碳排放熱點分析、數位申報與審查等功能模組。",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
