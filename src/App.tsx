@@ -111,7 +111,16 @@ export default function App() {
           />
         );
       case 'import_mapping':
-        return <ImportMappingView searchQuery={searchWord} />;
+        return (
+          <ImportMappingView
+            searchQuery={searchWord}
+            bomItems={bomItems}
+            setBomItems={setBomItems}
+            auditLogs={auditLogs}
+            setAuditLogs={setAuditLogs}
+            onNavigateToSop={() => setActiveTab('sop_declaration')}
+          />
+        );
       case 'fast_estimation':
         return <FastEstimationView />;
       case 'hotspot_analysis':
