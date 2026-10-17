@@ -1182,10 +1182,10 @@ export function SupportView() {
             </p>
             <div className="bg-indigo-50/60 p-4 rounded-xl border border-indigo-100 space-y-1.5 text-xs">
               <span className="block font-bold text-indigo-800 text-sm">
-                臺北市民當家熱線：1999 (外縣市請撥：02-2720-8889)
+                臺北市民當家熱線：1999 (外縣市請撥：02-2000-0000)
               </span>
-              <span className="block text-slate-600">分機：#1085 (張工程師)、#1088 (李管理科長)</span>
-              <span className="block text-slate-600 font-mono">公務信箱：carbon-ledgers@gov.taipei</span>
+              <span className="block text-slate-600">分機：#0000 (張工程師)、#1111 (李管理科長)</span>
+              <span className="block text-slate-600 font-mono">公務信箱：carbon@taipei</span>
             </div>
           </div>
 

@@ -12,6 +12,7 @@ interface HeaderProps {
   setSearchWord: (word: string) => void;
   placeholderText?: string;
   onOpenMobileMenu?: () => void;
+  onOpenSupport?: () => void;
 }
 
 export default function Header({
@@ -21,6 +22,7 @@ export default function Header({
   setSearchWord,
   placeholderText = '搜尋專案名稱、工項編碼、材料或承攬單位...',
   onOpenMobileMenu,
+  onOpenSupport,
 }: HeaderProps) {
   return (
     <header className="bg-white flex justify-between items-center w-full px-3 md:px-8 h-16 border-b border-slate-200 sticky top-0 z-10 shadow-xs font-sans shrink-0">
@@ -74,9 +76,14 @@ export default function Header({
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span>
         </button>
 
-        {/* Support help */}
-        <button className="text-slate-500 hover:bg-slate-50 rounded-full p-2 hover:text-indigo-600 transition-all cursor-pointer sm:block hidden" title="申報作業說明與常見問題">
-          <HelpCircle className="w-4 h-4" />
+        {/* Support help button - direct navigation to 申報支援與諮詢 */}
+        <button
+          onClick={onOpenSupport}
+          className="text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 rounded-full p-2 transition-all cursor-pointer flex items-center justify-center"
+          title="申報支援與諮詢（操作手冊與專線）"
+          aria-label="開啟申報支援與諮詢"
+        >
+          <HelpCircle className="w-4.5 h-4.5" />
         </button>
 
         {/* Little Divider */}

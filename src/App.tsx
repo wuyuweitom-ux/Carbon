@@ -173,6 +173,7 @@ export default function App() {
           searchWord={searchWord}
           setSearchWord={setSearchWord}
           onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+          onOpenSupport={() => setActiveTab('support')}
         />
 
         {/* Dashboard Main Workspace area */}
