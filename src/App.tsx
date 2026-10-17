@@ -4,6 +4,13 @@
  */
 
 import { useState } from 'react';
+import {
+  LayoutDashboard,
+  FileSpreadsheet,
+  Sliders,
+  Calculator,
+  Grid,
+} from 'lucide-react';
 import { TabType } from './types';
 import { MODULE_DEFINITIONS } from './constants/modules';
 import {
@@ -41,6 +48,7 @@ import {
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [searchWord, setSearchWord] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Core application States holding original datasets to enable dynamic updates / creation
   const [project, setProject] = useState(defaultProjectInfo);
@@ -147,11 +155,13 @@ export default function App() {
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-slate-50/80 font-sans text-slate-800 antialiased selection:bg-[#00356a] selection:text-white">
-      {/* Sidebar - Unified Layout Alignments */}
+      {/* Sidebar - Desktop & Mobile Drawer */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenAddUser={handleOpenAddUser}
+        isOpenMobile={isMobileMenuOpen}
+        onCloseMobile={() => setIsMobileMenuOpen(false)}
       />
 
       {/* Main Panel Content wrapper */}
@@ -162,14 +172,78 @@ export default function App() {
           categoryLabel={currentModule.categoryLabel}
           searchWord={searchWord}
           setSearchWord={setSearchWord}
+          onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
         />
 
         {/* Dashboard Main Workspace area */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 space-y-8 bg-slate-50 focus:outline-none">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-5 md:p-6 lg:p-8 pb-24 lg:pb-8 space-y-6 sm:space-y-8 bg-slate-50 focus:outline-none">
           <div className="max-w-7xl mx-auto space-y-6">
             {renderMainView()}
           </div>
         </main>
+
+        {/* Mobile Bottom Quick-Navigation Bar */}
+        <nav
+          className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-1.5 py-1.5 z-30 flex items-center justify-around shadow-[0_-4px_12px_rgba(0,0,0,0.05)] select-none"
+          aria-label="行動版快速導覽"
+        >
+          <button
+            onClick={() => setActiveTab('dashboard')}
+            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-lg text-[10px] transition-all cursor-pointer ${
+              activeTab === 'dashboard'
+                ? 'text-indigo-600 font-extrabold bg-indigo-50/70 scale-105'
+                : 'text-slate-500 hover:text-indigo-600 font-medium'
+            }`}
+          >
+            <LayoutDashboard className="w-4 h-4 mb-0.5" />
+            <span>儀表板</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('import_mapping')}
+            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-lg text-[10px] transition-all cursor-pointer ${
+              activeTab === 'import_mapping'
+                ? 'text-indigo-600 font-extrabold bg-indigo-50/70 scale-105'
+                : 'text-slate-500 hover:text-indigo-600 font-medium'
+            }`}
+          >
+            <FileSpreadsheet className="w-4 h-4 mb-0.5" />
+            <span>PCCES媒合</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('sop_declaration')}
+            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-lg text-[10px] transition-all cursor-pointer ${
+              activeTab === 'sop_declaration'
+                ? 'text-indigo-600 font-extrabold bg-indigo-50/70 scale-105'
+                : 'text-slate-500 hover:text-indigo-600 font-medium'
+            }`}
+          >
+            <Sliders className="w-4 h-4 mb-0.5" />
+            <span>SOP填報</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('fast_estimation')}
+            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-lg text-[10px] transition-all cursor-pointer ${
+              activeTab === 'fast_estimation'
+                ? 'text-indigo-600 font-extrabold bg-indigo-50/70 scale-105'
+                : 'text-slate-500 hover:text-indigo-600 font-medium'
+            }`}
+          >
+            <Calculator className="w-4 h-4 mb-0.5" />
+            <span>快速估算</span>
+          </button>
+
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="flex flex-col items-center justify-center py-1 px-2.5 rounded-lg text-[10px] text-slate-600 hover:text-indigo-600 font-medium transition-all cursor-pointer active:scale-95"
+            title="查看全部 12 項系統功能模組"
+          >
+            <Grid className="w-4 h-4 mb-0.5 text-indigo-500" />
+            <span>全部模組</span>
+          </button>
+        </nav>
       </div>
     </div>
   );

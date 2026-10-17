@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Search, Bell, HelpCircle } from 'lucide-react';
+import { Search, Bell, HelpCircle, Menu } from 'lucide-react';
 
 interface HeaderProps {
   title?: string;
@@ -11,6 +11,7 @@ interface HeaderProps {
   searchWord: string;
   setSearchWord: (word: string) => void;
   placeholderText?: string;
+  onOpenMobileMenu?: () => void;
 }
 
 export default function Header({
@@ -19,13 +20,24 @@ export default function Header({
   searchWord,
   setSearchWord,
   placeholderText = '搜尋專案名稱、工項編碼、材料或承攬單位...',
+  onOpenMobileMenu,
 }: HeaderProps) {
   return (
-    <header className="bg-white flex justify-between items-center w-full px-4 md:px-8 h-16 border-b border-slate-200 sticky top-0 z-10 shadow-xs font-sans shrink-0">
-      {/* Title block */}
-      <div className="flex items-center gap-3 min-w-0">
-        <div className="flex items-center gap-2.5 truncate">
-          <h2 className="text-base md:text-lg font-black text-slate-900 leading-tight tracking-tight truncate">
+    <header className="bg-white flex justify-between items-center w-full px-3 md:px-8 h-16 border-b border-slate-200 sticky top-0 z-10 shadow-xs font-sans shrink-0">
+      {/* Title block with mobile hamburger button */}
+      <div className="flex items-center gap-2 md:gap-3 min-w-0">
+        {/* Mobile Hamburger Menu Toggle */}
+        <button
+          onClick={onOpenMobileMenu}
+          className="lg:hidden p-2 -ml-1 rounded-lg text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
+          title="開啟系統功能選單"
+          aria-label="開啟系統功能選單"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        <div className="flex items-center gap-2 truncate">
+          <h2 className="text-sm sm:text-base md:text-lg font-black text-slate-900 leading-tight tracking-tight truncate">
             {title}
           </h2>
           {categoryLabel && (
@@ -75,10 +87,10 @@ export default function Header({
           <img
             alt="公務人員頭像"
             className="w-8 h-8 rounded-full border border-slate-200 shadow-sm object-cover"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgvBA0hEsUcChrMEgeDjOoTv5yDuiNEBLPIMG8n-ZxB6D7q36xJ0l4S4r0SIbengsbLS8jnw4Aw-aWtUDoc1ldfnf5TPqoID77PccNt98llqLyG-Lk52Hc77_IdxaWN1dweui9PMyR-TW9EZDRyBVX0_QN5x5ySPsFMyOA_N1as1QuitSEhBtrWhlbDfvbQLIfmnjOuiLPjpuUl5TZ5gRZxUQ6ZuUYPT_qkISjoHXC9l12vGxDnAyHl5iPHHtR0AFYUbJYvW8LImhm"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1PP9odyGm-wTRWLRkpIaGZxUFKEzM_YxQK5My2PCKkHHzTJPgHiQSPerlL20oLu5UV0hFs2dd8HdoNhoWMJydqh9gapB8AsR37QW6Ekopyi6EhUtW6cA2UKZSupqP5Xa9Mg-yosw4LTH_YO1QWaXu_DJXg28F4TZtO0RCwf1bycVMG_uMmU-O086iiGzs15hAeXMyrIkbVz7mMtcSaMZjsJVH-hATfvmqC0FTHYBV4JhGJ4wu4pNNB4kru59elgXSqNqDiYcVTgQJ"
           />
           <div className="hidden xl:flex flex-col text-left">
-            <span className="text-[11px] font-bold text-slate-800 leading-none">陳美華 審查長</span>
+            <span className="text-[11px] font-bold text-slate-800 leading-none">林科長</span>
             <span className="text-[9px] text-indigo-600 font-semibold mt-0.5">工務局管理科</span>
           </div>
         </div>
