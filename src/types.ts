@@ -83,7 +83,7 @@ export interface ActivityLog {
   title: string;
   subtitle: string;
   timeAgo: string;
-  type: 'nlp' | 'upload' | 'system' | 'edit';
+  type: 'nlp' | 'upload' | 'system' | 'edit' | 'download';
 }
 
 export interface AutomatedCheck {
